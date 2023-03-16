@@ -44,9 +44,9 @@ pushd "$MESHOPT_SOURCE_DIR"
         windows*)
             load_vsvars
 
-            cmake ../${MESHOPT_SOURCE_DIR} -G"$AUTOBUILD_WIN_CMAKE_GEN" \
+            cmake ../${MESHOPT_SOURCE_DIR} -G "$AUTOBUILD_WIN_CMAKE_GEN" \
+                -A "$AUTOBUILD_WIN_VSPLATFORM" \
                 -DCMAKE_INSTALL_PREFIX="$(cygpath -m "$stage")"
-
             build_sln "meshoptimizer.sln" "Release|$AUTOBUILD_WIN_VSPLATFORM" "Install"
 
 
