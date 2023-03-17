@@ -31,12 +31,13 @@ source_environment_tempfile="$stage/source_environment.sh"
 
 MESHOPT_SOURCE_DIR="meshoptimizer"
 
-# version will end with something like '160 /* 0.16 */'
-version=$(perl -ne 's/^#define MESHOPTIMIZER_VERSION ([0-9]{3,4})/$1/ && print' "${MESHOPT_SOURCE_DIR}/src/meshoptimizer.h" | tr -d '\r' )
-version_adj=$(awk -v a="$version" 'BEGIN{b = 1000; print (a / b)}')
+# the name of the file to include in version.c
+VERSION_HEADER_FILE="$MESHOPT_SOURCE_DIR/src/meshoptimizer.h"
+
+# the name of the #define macro to print from the included header in version.c
+VERSION_MACRO="MESHOPTIMIZER_VERSION"
 
 build=${AUTOBUILD_BUILD_ID:=0}
-echo "${version_adj}.${build}" > "${stage}/VERSION.txt"
 
 pushd "$MESHOPT_SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
@@ -60,6 +61,15 @@ pushd "$MESHOPT_SOURCE_DIR"
 
             rm -r "$stage/lib/cmake"
 
+            # populate version_file - prefer this method of regex extraction
+            # with a multitude of different tools - that can and does break over time.
+            cl /DVERSION_HEADER_FILE="\"$VERSION_HEADER_FILE\"" \
+               /DVERSION_MACRO="$VERSION_MACRO" \
+               /Fo"$(cygpath -w "$stage/version.obj")" \
+               /Fe"$(cygpath -w "$stage/version.exe")" \
+               "$(cygpath -w "$top/version.c")"
+            "$stage/version.exe" > "$stage/version.txt"
+            rm "$stage"/version.{obj,exe}
         ;;
 
         darwin*)
@@ -77,6 +87,14 @@ pushd "$MESHOPT_SOURCE_DIR"
                 "$stage/include/meshoptimizer/meshoptimizer.h"
 
             rm -r "$stage/lib/cmake"
+            
+            # populate version_file - prefer this method of regex extraction
+            # with a multitude of different tools - that can and does break over time.
+            cc -DVERSION_HEADER_FILE="\"$VERSION_HEADER_FILE\"" \
+               -DVERSION_MACRO="$VERSION_MACRO" \
+               -o "$stage/version" "$top/version.c"
+            "$stage/version" > "$stage/version.txt"
+            rm "$stage/version"
         ;;
 
         linux*)
