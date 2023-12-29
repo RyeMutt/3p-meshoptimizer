@@ -127,6 +127,15 @@ pushd "$MESHOPT_SOURCE_DIR"
                 "$stage/include/meshoptimizer/meshoptimizer.h"
 
             rm -r "$stage/lib/cmake"
+
+            # populate version_file - prefer this method of regex extraction
+            # with a multitude of different tools - that can and does break over time.
+            gcc -DVERSION_HEADER_FILE="\"$VERSION_HEADER_FILE\"" \
+               -DVERSION_MACRO="$VERSION_MACRO" \
+               -o "$stage/version" "$top/version.c"
+            "$stage/version" > "$stage/VERSION.txt"
+            rm "$stage/version"
+
         ;;
     esac
     mkdir -p "$stage/LICENSES"
