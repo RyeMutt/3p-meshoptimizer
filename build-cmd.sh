@@ -117,8 +117,8 @@ pushd "$MESHOPT_SOURCE_DIR"
             make install
 
             mkdir -p "$stage/lib/release"
-            mv "$stage/lib/meshoptimizer.a" \
-                "$stage/lib/release/meshoptimizer.a"
+            mv "$stage/lib/libmeshoptimizer.a" \
+                "$stage/lib/release/libmeshoptimizer.a"
 
             mkdir -p "$stage/include/meshoptimizer"
             mv "$stage/include/meshoptimizer.h" \
