@@ -116,6 +116,8 @@ pushd "$MESHOPT_SOURCE_DIR"
             make -j $AUTOBUILD_CPU_COUNT
             make install
 
+            popd
+
             mkdir -p "$stage/lib/release"
             mv "$stage/lib/libmeshoptimizer.a" \
                 "$stage/lib/release/libmeshoptimizer.a"
