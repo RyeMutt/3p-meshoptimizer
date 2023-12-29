@@ -71,7 +71,7 @@
           <key>name</key>
           <string>darwin</string>
         </map>
-        <key>linux</key>
+        <key>linux64</key>
         <map>
           <key>configurations</key>
           <map>
@@ -91,7 +91,7 @@
             <string>lib/release/*.a</string>
           </array>
           <key>name</key>
-          <string>linux</string>
+          <string>linux64</string>
         </map>
         <key>windows</key>
         <map>
