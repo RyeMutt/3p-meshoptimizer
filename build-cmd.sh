@@ -109,13 +109,12 @@ pushd "$MESHOPT_SOURCE_DIR"
                 export CPPFLAGS="$TARGET_CPPFLAGS"
             fi
 
-            rm -rf build && mkdir build && pushd build
-
-            cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}" \
-
-            make -j $AUTOBUILD_CPU_COUNT
-            make install
-
+            rm -rf build && mkdir build
+            pushd build
+                cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}" \
+    
+                make -j $AUTOBUILD_CPU_COUNT
+                make install
             popd
 
             mkdir -p "$stage/lib/release"
