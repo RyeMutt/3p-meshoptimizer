@@ -111,7 +111,7 @@ pushd "$MESHOPT_SOURCE_DIR"
 
             rm -rf build && mkdir build
             pushd build
-                cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}" \
+                cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}"
     
                 make -j $AUTOBUILD_CPU_COUNT
                 make install
