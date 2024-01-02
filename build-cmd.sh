@@ -109,22 +109,32 @@ pushd "$MESHOPT_SOURCE_DIR"
                 export CPPFLAGS="$TARGET_CPPFLAGS"
             fi
 
-            rm -rf build && mkdir build && pushd build
-
-            cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}" \
-
-            make -j $AUTOBUILD_CPU_COUNT
-            make install
+            rm -rf build && mkdir build
+            pushd build
+                cmake .. -DCMAKE_INSTALL_PREFIX:STRING="${stage}"
+    
+                make -j $AUTOBUILD_CPU_COUNT
+                make install
+            popd
 
             mkdir -p "$stage/lib/release"
-            mv "$stage/lib/meshoptimizer.a" \
-                "$stage/lib/release/meshoptimizer.a"
+            mv "$stage/lib/libmeshoptimizer.a" \
+                "$stage/lib/release/libmeshoptimizer.a"
 
             mkdir -p "$stage/include/meshoptimizer"
             mv "$stage/include/meshoptimizer.h" \
                 "$stage/include/meshoptimizer/meshoptimizer.h"
 
             rm -r "$stage/lib/cmake"
+
+            # populate version_file - prefer this method of regex extraction
+            # with a multitude of different tools - that can and does break over time.
+            gcc -DVERSION_HEADER_FILE="\"$VERSION_HEADER_FILE\"" \
+               -DVERSION_MACRO="$VERSION_MACRO" \
+               -o "$stage/version" "$top/version.c"
+            "$stage/version" > "$stage/VERSION.txt"
+            rm "$stage/version"
+
         ;;
     esac
     mkdir -p "$stage/LICENSES"
